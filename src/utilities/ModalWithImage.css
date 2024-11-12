@@ -1,0 +1,29 @@
+.modal {
+    display: flex;
+    border-radius: 10px;
+  }
+  
+  .image-container {
+    position: relative;
+    width: 340px;
+    padding: 20px;
+    background-color: white; 
+  }
+
+  .image {
+    width: 304px;
+    height: 378px;
+    border-radius: 20px;
+    object-fit: cover; /* Ensure the image covers the container */
+  }
+  
+  .payment-text {
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: center;
+  }
+  .bold-text {
+    font-weight: bold;
+    font-size: 32px;
+  }
+  
