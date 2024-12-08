@@ -280,7 +280,7 @@ const TrigonometryModelSimulation = () => {
   return (
     <Box style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 2,}}
     onDragOver={handleDragOver} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMouseMove}>
-      <ThreeJSSimulationHandler sim_id={sim_id} data={dataFromState} />
+  
     <Box style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundImage: `url(${bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center',opacity: 0.7, zIndex: -1,}} />
       <Box style={{position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: '#BADEF4', opacity: 0.6, zIndex: -1,}} />
       <Button onClick={handleBackButton } variant='outline' style={{position: 'fixed', top: 10, right: 10, zIndex: 1001, padding: 0, border: '0.1px solid #BADEF4'}}>

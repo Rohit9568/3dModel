@@ -39,10 +39,7 @@ import DetailModel from "./components/MegaModels/AnatomyModel/DetailModel";
 import OpticsModelSimulation from "./components/opticsSimulation/OpticsModelSimulation";
 const router = createBrowserRouter(
   [
-    {
-      path: "/",
-      element: <RoutingPage />,
-    },
+    
     {
       path: "/onboarding",
       element: <OnBoarding />,
@@ -64,11 +61,11 @@ const router = createBrowserRouter(
       element: <UnityMegaSimulation />,
     },
     {
-      path: "/:Institutename/:id/teach1/:navbarId/simulation/SIM-e5ac893d-ce6d-4272-b30c-73229e69c694",
+      path: "/vector",
       element: <VectorModelSimulation />
     },
     {
-      path: "/:Institutename/:id/teach1/:navbarId/simulation/SIM-98715368-b544-4935-91b2-ad0fde086509",
+      path: "/trigo",
       element: <TrigonometryModelSimulation />
     },
     {

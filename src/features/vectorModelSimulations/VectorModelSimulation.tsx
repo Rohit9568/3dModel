@@ -249,75 +249,67 @@ const VectorModelSimulation: React.FC = () => {
     const handleDragStart = (event: React.DragEvent<HTMLButtonElement>, id: number) => {
         event.dataTransfer.setData('modelId', id.toString());
       };
-      
-      const handleModelClick = (id: string)=>{
-        if (id == '1') {
-          setShowBoatSimulation(true);
-          setShowAeroplaneSimulation(false);
-          setShowCannonSimulation(false);
-          setShowWedgeSimulation(false);
-          setBoatAnimation(false);
-          setShowGraphScene(false);
-          setZoom(25);
-          setDrawingMode(false);
-          handleMenuItemClick (14);
-          handleMouseUp();
-      } else if (id == '2') {
-          setShowBoatSimulation(false);
-          setShowAeroplaneSimulation(true);
-          setShowCannonSimulation(false);
-          setShowWedgeSimulation(false);
-          setBoatAnimation(false);
-          setZoom(25);
-          setShowGraphScene(false);
-          setDrawingMode(false);
-          handleMenuItemClick (14);
-          handleMouseUp();
-      }else if(id == '3'){
-          setShowBoatSimulation(false);
-          setShowAeroplaneSimulation(false);
-          setShowCannonSimulation(true);
-          setShowWedgeSimulation(false);
-          setBoatAnimation(false);
-          setShowGraphScene(false);
-          setZoom(25);
-          setDrawingMode(false);
-          handleMenuItemClick (14);
-          handleMouseUp();
-      }else if(id == '4'){
-          setBoatAnimation(false);
-          setShowWedgeSimulation(true);
-          setShowBoatSimulation(false);
-          setShowAeroplaneSimulation(false);
-          setShowCannonSimulation(false);
-          setShowGraphScene(false);
-          setZoom(25);
-          setDrawingMode(false);
-          handleMenuItemClick (14);
-          handleMouseUp();
-      } else if (id == '5') {
-          setShowGraphScene(true);
-          setBoatAnimation(false);
-          setShowWedgeSimulation(false);
-          setShowBoatSimulation(false);
-          setShowAeroplaneSimulation(false);
-          setShowCannonSimulation(false);
-          setZoom(25);
-          setDrawingMode(false);
-          handleMenuItemClick (14);
-          handleMouseUp();
-      }
-      }
 
       const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         const id = event.dataTransfer.getData('modelId');
-      handleModelClick(id);
+        if (id == '1') {
+            setShowBoatSimulation(true);
+            setShowAeroplaneSimulation(false);
+            setShowCannonSimulation(false);
+            setShowWedgeSimulation(false);
+            setBoatAnimation(false);
+            setShowGraphScene(false);
+            setZoom(25);
+            setDrawingMode(false);
+            handleMenuItemClick (14);
+            handleMouseUp();
+        } else if (id == '2') {
+            setShowBoatSimulation(false);
+            setShowAeroplaneSimulation(true);
+            setShowCannonSimulation(false);
+            setShowWedgeSimulation(false);
+            setBoatAnimation(false);
+            setZoom(25);
+            setShowGraphScene(false);
+            setDrawingMode(false);
+            handleMenuItemClick (14);
+            handleMouseUp();
+        }else if(id == '3'){
+            setShowBoatSimulation(false);
+            setShowAeroplaneSimulation(false);
+            setShowCannonSimulation(true);
+            setShowWedgeSimulation(false);
+            setBoatAnimation(false);
+            setShowGraphScene(false);
+            setZoom(25);
+            setDrawingMode(false);
+            handleMenuItemClick (14);
+            handleMouseUp();
+        }else if(id == '4'){
+            setBoatAnimation(false);
+            setShowWedgeSimulation(true);
+            setShowBoatSimulation(false);
+            setShowAeroplaneSimulation(false);
+            setShowCannonSimulation(false);
+            setShowGraphScene(false);
+            setZoom(25);
+            setDrawingMode(false);
+            handleMenuItemClick (14);
+            handleMouseUp();
+        } else if (id == '5') {
+            setShowGraphScene(true);
+            setBoatAnimation(false);
+            setShowWedgeSimulation(false);
+            setShowBoatSimulation(false);
+            setShowAeroplaneSimulation(false);
+            setShowCannonSimulation(false);
+            setZoom(25);
+            setDrawingMode(false);
+            handleMenuItemClick (14);
+            handleMouseUp();
+        }
     };
-
-    const handleModelItemClick = (id: number)=>{
-      handleModelClick(id.toString());
-    }
     
       const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -504,7 +496,7 @@ const VectorModelSimulation: React.FC = () => {
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
         >
-                <ThreeJSSimulationHandler sim_id={sim_id} data={dataFromState} />
+              
                 <div
         style={{
             position: 'absolute',
@@ -547,7 +539,6 @@ Please try saving after sometime</Notification>}
                         variant='outline'
                         draggable
                         onDragStart={(e) => handleDragStart(e, item.id)}
-                        onClick={()=>handleModelItemClick(item.id)}
                         sx={{
                             display: 'flex', alignItems: 'center', justifyContent: 'center', width: isSmallScreen ? 30 :  40, height: isSmallScreen? 30: 40, padding: 0,
                             '&:hover': {
