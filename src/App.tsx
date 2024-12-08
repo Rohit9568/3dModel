@@ -41,11 +41,8 @@ import Home from "./components/Home";
 const router = createBrowserRouter(
   [
     
-    {
-      path: "/",
-      element: <Home />,
-    }
-    ,
+   
+    
 
     {
       path: "/onboarding",
