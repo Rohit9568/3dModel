@@ -247,7 +247,7 @@ export const TimeManagement = (props: {
       },
       datalabels: {
         color: "black",
-        formatter: (value, context) => {
+        formatter: (value:any, context:any) => {
           return value + "sec";
         },
         anchor: "center",

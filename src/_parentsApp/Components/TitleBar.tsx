@@ -39,6 +39,7 @@ interface ShowName2Props {
   name: string;
   profilePic: string;
   mainPath: string;
+  instituteName: string;
   onShowProfileClick?: () => void;
 }
 export function ShowName2(props: ShowName2Props) {
@@ -74,6 +75,14 @@ export function ShowName2(props: ShowName2Props) {
             Profile
           </Menu.Item>
         )}
+        <Menu.Item
+          onClick={() => {
+            navigate(`/privacypolicy/${props.instituteName}`);
+          }}
+          icon={<IconUserCircle size={16} />}
+        >
+          Privacy Policy
+        </Menu.Item>
         <Menu.Item
           color="red"
           icon={<IconTrash size={14} />}
@@ -166,6 +175,7 @@ const TitleBar = (props: TitleBarProps) => {
           mainPath={props.mainPath}
           onShowProfileClick={props.onShowProfileClick}
           profilePic={props.profilePic}
+          instituteName={props.schoolName}
         />
       </Flex>
     </Flex>

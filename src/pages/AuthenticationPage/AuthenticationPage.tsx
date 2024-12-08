@@ -22,6 +22,7 @@ import { LoginPageFooter } from "../../components/LoginPageFooter";
 interface AuthenticationPageProps {
   onLoginSuccess: () => void;
   isTeacherLogin?: boolean;
+  defaultDetails?: LoginFormDetails;
 }
 
 export function AuthenticationPage(props: AuthenticationPageProps) {
@@ -33,8 +34,13 @@ export function AuthenticationPage(props: AuthenticationPageProps) {
   const [shownAuthPageType, setShownAuthPageType] = useState(
     AuthPageType.Login
   );
+
   useEffect(() => {
     Mixpanel.track(WebAppEvents.VIGNAM_APP_LOGIN_PAGE_ACCESSED);
+    console.log(props.defaultDetails);
+    if(props.defaultDetails && props.defaultDetails.email!=null && props.defaultDetails.email!=""){
+      onLoginClick(props.defaultDetails)
+    }
   }, []);
   useEffect(() => {
     RemoveValueFromLocalStorage(LocalStorageKey.User);

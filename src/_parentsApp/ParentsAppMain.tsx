@@ -648,7 +648,7 @@ export function ParentsAppMain() {
               studentName={userInfo?.name ?? ""}
               onClose={() => {
                 setisvideoCall(false);
-                navigate(`/${mainPath}`);
+                window.close();
               }}
             />
           </React.Suspense>

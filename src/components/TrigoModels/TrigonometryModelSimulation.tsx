@@ -171,6 +171,14 @@ const TrigonometryModelSimulation = () => {
         }
     }
 
+    const handleBuildingClick = ()=>{
+      if(!building1Show){
+        setBuilding1Show(true);
+      }else if(!building2Show){
+        setBuilding2Show(true);
+      }
+    }
+
     const handleMenuItemClick = (id: string)=>{
         if(id === MenuItemsEnum.RESET){
             setDrawingMode(false);
@@ -286,6 +294,7 @@ const TrigonometryModelSimulation = () => {
                         variant='outline'
                         draggable
                         onDragStart={(e) => handleDragStart(e, "building")}
+                        onClick={handleBuildingClick}
                         sx={{
                             display: 'flex', alignItems: 'center', justifyContent: 'center', width: isMediumScreen ? 35: 40, height:  isMediumScreen ? 35:40, padding: 0,
                             '&:hover': {

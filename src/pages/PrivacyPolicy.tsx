@@ -5,7 +5,7 @@ import styled from "styled-components";
 function PrivacyPolicyScreen() {
   
   const params = useParams();
-  const instituteName = params.instituteName;
+  const instituteName = params.instituteName??"Vignam";
 
   return (
     <Container>
@@ -29,6 +29,8 @@ function PrivacyPolicyScreen() {
         We may also collect information about teachers and students, including but not limited to, study materials, questions, shared content, and user-generated data. Additionally, 
         we request permission to access and collect photos, videos, and user files. 
         This means that we may have access to and collect information related to the photos, videos, and files stored on your device or shared through our Service.
+        <br/><br/>
+        <b>Media Files:</b> With your consent, we may collect photos, videos, and files from your device to provide you with the functionality of our App.
         </p>
         <h2>3. How We Use Your Information</h2>
         <p>

@@ -8,7 +8,7 @@ import { Mixpanel } from "../../../utilities/Mixpanel/MixpanelHelper";
 import { WebAppEvents } from "../../../utilities/Mixpanel/AnalyticeEventWebApp";
 import { User1 } from "../../../@types/User";
 import { QuestionParentType, QuestionType, findQuestionType } from "../../../@types/QuestionTypes.d";
-import { createNewSectionTypeHtmlFromTestData } from "./NewTeacherTest";
+import { createNewSectionTypeHtmlFromTestData, createNewSectionTypeHtmlFromTestDataV2 } from "./NewTeacherTest";
 import { FileUpload } from "../../../features/fileUpload/FileUpload";
 import useParentCommunication from "../../../hooks/useParentCommunication";
 

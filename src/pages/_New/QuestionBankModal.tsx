@@ -47,7 +47,6 @@ const subjectsActions = subjects.actions;
 
 export function QuestionBankModal(props: {
   type: string;
-  setLoadingData: (val: boolean) => void;
   isOpened: boolean;
   setOpened: (val: boolean) => void;
   onSubmitClick: (val: any) => void;
@@ -74,6 +73,8 @@ export function QuestionBankModal(props: {
     { value: string; label: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loadingData, setLoadingData] = useState<boolean>(false);
+
   const [isManualSelection, setIsManualSelection] = useState<boolean>(false);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selecteddifficultyLevel, setSelecteddifficultyLevel] = useState<
@@ -104,7 +105,6 @@ export function QuestionBankModal(props: {
     setIsLoading(true);
     fetchTestChaptersQuestions(chapters, [props.type], null, undefined)
       .then((data: any) => {
-        console.log(data);
         setAllQuestions(data);
         setIsModalOpened(true);
         setIsLoading(false);
@@ -250,7 +250,7 @@ export function QuestionBankModal(props: {
     })
   );
   function getAIquestions() {
-    props.setLoadingData(true);
+    setLoadingData(true);
     fetchTestChaptersQuestions(
       chapters,
       [props.type],
@@ -258,9 +258,7 @@ export function QuestionBankModal(props: {
       selecteddifficultyLevel
     )
       .then((data: any) => {
-        console.log(data);
-        props.setLoadingData(false);
-
+        setLoadingData(false);
         const questions: any[] = data.map((x: any) => {
           return {
             ...x,
@@ -271,7 +269,7 @@ export function QuestionBankModal(props: {
       })
       .catch((err) => {
         console.log(err);
-        props.setLoadingData(false);
+        setLoadingData(false);
       });
   }
 
@@ -279,7 +277,6 @@ export function QuestionBankModal(props: {
     if (selectedSubjects.length > 0) {
       runMultipleCallsforSubjectData({ subjects: selectedSubjects })
         .then((x) => {
-          console.log(x);
           const chapters1: { value: string; label: string }[] = [];
           x.map((y: any) => {
             y.userChapters.map((z: any) => {
@@ -297,7 +294,7 @@ export function QuestionBankModal(props: {
   }, [selectedSubjects]);
   return (
     <>
-      <LoadingOverlay visible={isLoading} />
+      <LoadingOverlay visible={isLoading || loadingData} />
       <Modal
         opened={props.isOpened && !isModalOpened}
         onClose={() => {
@@ -396,7 +393,9 @@ export function QuestionBankModal(props: {
               style={{ borderRadius: "24px" }}
               size="lg"
               onClick={() => {
-                if (!isManualSelection) getAIquestions();
+                if (!isManualSelection) {
+                  getAIquestions();
+                }
                 else {
                   fetchQuestions();
                 }
@@ -407,7 +406,7 @@ export function QuestionBankModal(props: {
                 },
               }}
               my={10}
-              disabled={chapters.length === 0}
+              disabled={chapters.length === 0 || loadingData}
             >
               Generate Questions
             </Button>

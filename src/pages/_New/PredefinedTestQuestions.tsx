@@ -51,7 +51,7 @@ export interface MCQTypedQuestion {
 
 export interface CASEtypedQuestion {
   questionImageUrl: string;
-  questions: MCQCaseTypedQuestion[] | SUBjectivetypedQuestion[];
+  questions: (MCQCaseTypedQuestion | SUBjectivetypedQuestion)[];
   caseStudyText: string;
   _id: string;
 }

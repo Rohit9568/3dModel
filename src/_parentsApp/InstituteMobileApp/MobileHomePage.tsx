@@ -23,7 +23,6 @@ import { NoticesDisplay } from "../WebsiteBuilderViewer/components/NoticesDispla
 import { InstituteTheme } from "../../@types/User";
 import { WebAppEvents } from "../../utilities/Mixpanel/AnalyticeEventWebApp";
 import { Mixpanel } from "../../utilities/Mixpanel/MixpanelHelper";
-import { ShowName2 } from "../Components/TitleBar";
 import { ViewAllCourses } from "./ViewAllCourses";
 import ScheduleDaysBatch from "../Components/ScheduleDaysBatch";
 

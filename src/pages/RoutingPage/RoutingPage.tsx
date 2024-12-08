@@ -13,6 +13,7 @@ import { RootState } from "../../store/ReduxStore";
 import { User, User1 } from "../../@types/User";
 import { useSelector } from "react-redux";
 import { getUserById } from "../../features/user/userSlice";
+import { generateCredentialsOnBasisOfCode } from "./DefaultCredentialsMap";
 interface ApiResponseClasses {
   chaptersCount: number;
   classId: string;
@@ -34,6 +35,7 @@ export function RoutingPage() {
 
 const params = new URLSearchParams(location.search);
 const sim_id = params.get('sim_id');
+const defaultLoginTokenForSimulations  = params.get('def_token');
 const dataFromState = location.state && location.state.data;
   useEffect(() => {
     if (user) {
@@ -46,7 +48,11 @@ const dataFromState = location.state && location.state.data;
               navigate(`/${user.instituteName}/${user.instituteId}/teach1/all simulations/simulation/${sim_id}`, {state: {data: dataFromState}});
             }else if(sim_id && !dataFromState){
               navigate(`/${user.instituteName}/${user.instituteId}/teach1/all simulations/simulation/${sim_id}`);
-            }else if(!sim_id){
+            }
+            else if(!sim_id && defaultLoginTokenForSimulations){
+              navigate(`/${user.instituteName}/${user.instituteId}/teach1/all simulations`)
+            }
+            else if(!sim_id && !defaultLoginTokenForSimulations){
               navigate(`/${user.instituteName}/${user.instituteId}/teach1/dashboard`);
             }
           }
@@ -67,6 +73,7 @@ const dataFromState = location.state && location.state.data;
               window.location.reload();
             }}
             isTeacherLogin={true}
+            defaultDetails = {generateCredentialsOnBasisOfCode(defaultLoginTokenForSimulations)}
           />
         )}
       </div>

@@ -826,6 +826,11 @@ export function SingleTest(props: SingletestProps) {
                         Mixpanel.track(
                           ParentPageEvents.TEST_PAGE_START_TEST_SUBMIT_BUTTON_CLICKED
                         );
+                        temp.studentTestAnswerSheet.questions.forEach((innerQuestion)=>{
+                          if(!innerQuestion.superSectionName || !(innerQuestion.superSectionName.length>0)){
+                            innerQuestion.superSectionName = "Main"
+                          }
+                        })
                         onTestSubmitClick(temp);
                         setCurrentScreen(StudentTestScreens.UploadedScreen);
                       }}

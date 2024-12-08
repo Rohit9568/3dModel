@@ -404,7 +404,7 @@ interface MCQTypedQuestion {
 
 interface CASEtypedQuestion {
   questionImageUrl: string;
-  questions: MCQTypedQuestion[] | SUBjectivetypedQuestion[];
+  questions: (MCQTypedQuestion | SUBjectivetypedQuestion)[];
   caseStudyText: string;
   _id: string;
   type: string;
@@ -495,50 +495,6 @@ interface UserChapter {
   videos: string[];
   shared: boolean;
 }
-
-/*
-{
-    "_id": "UCHP-48351105-d5a4-4dc7-9925-58fe94f70e2a",
-    "name": "Where to Look from",
-    "chapterId": "CHP-ae0a0faf-00c5-416d-a969-9fbe2e0917f0",
-    "chapterNotes": [],
-    "chapterLessonPlan": [
-        {
-            "fileName": "Untitled document.pdf",
-            "url": "https://vignam-content-images.s3.ap-south-1.amazonaws.com/2023-10-10T13-51-25-339Z.pdf",
-            "_id": "652556dd05dc8b6f45ff700f"
-        }
-    ],
-    "chapterWorksheets": [],
-    "chapterPreTestsStatus": {
-        "testTaken": false,
-        "isFirstTime": true,
-        "_id": "6624ef5136edab34ce3af196"
-    },
-    "chapterMindmaps": [],
-    "introduction": "",
-    "preRequisiteTopics": [],
-    "objectives": [],
-    "shared": false,
-    "simulations": [
-        {
-            "_id": "SIM-bfca3774-5ecf-46a8-8e0c-b72cdaac3f6b",
-            "isActivity": true,
-            "isSimulation": true,
-            "simulationTags": [
-                "Shapes",
-                "Orientation"
-            ],
-            "name": "Shapes 3D view",
-            "thumbnailImageUrl": "https://vignam-simulations-stage.s3.ap-south-1.amazonaws.com/SIM-bfca3774-5ecf-46a8-8e0c-b72cdaac3f6b/SIM-bfca3774-5ecf-46a8-8e0c-b72cdaac3f6b.png"
-        }
-    ],
-    "topics": [],
-    "unselectedSimulations": [],
-    "videos": [],
-    "sharedBatches": []
-}
-*/
 
 interface SingleSubject {
   _id: string;

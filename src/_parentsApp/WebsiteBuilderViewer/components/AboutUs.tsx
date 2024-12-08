@@ -258,7 +258,7 @@ export function AboutUs(props: {
           >
             {props.heading}
           </Text>
-          <Text ff="Roboto" c={"#6B6B84"} fz={16} style={{ lineHeight: 1.6 }}>
+          <Text ff="Roboto" c={"#6B6B84"} fz={16} style={{ lineHeight: 1.6, whiteSpace:"pre-line" } }>
             {readMore
               ? props.description
               : props.description.length === 0

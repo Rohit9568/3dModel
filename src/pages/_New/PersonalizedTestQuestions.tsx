@@ -116,6 +116,7 @@ export function MCQCaseBasedQuestion(props: MCQCaseBasedQuestionProps) {
   const isMd = useMediaQuery(`(max-width: 820px)`);
   return (
     <Stack>
+      <Text> Question :</Text>
       <Flex>
         <Flex w="100%">
           <SingleTextFeild
@@ -154,11 +155,8 @@ export function MCQCaseBasedQuestion(props: MCQCaseBasedQuestionProps) {
             isCorrect={x.isCorrect}
             answers={answers}
             setanswers={(val) => {
-              setanswers(val);
-              // props.onEditClick({
-              //   ...props.data,
-              //   answers: val,
-              // });
+              answers[i] = val[i];
+              setanswers([...answers]);
             }}
             onimageAdd={(val) => {
               setanswerImages((prev) => {
@@ -274,12 +272,10 @@ export function MCQCaseBasedQuestion(props: MCQCaseBasedQuestionProps) {
 }
 interface MCQOptionProps {
   setanswers: (
-    data: React.SetStateAction<
-      {
-        isCorrect: boolean;
-        text: string;
-      }[]
-    >
+    data: {
+      isCorrect: boolean;
+      text: string;
+    }[]
   ) => void;
   answers: {
     text: string;
@@ -380,33 +376,18 @@ function MCQOption(props: MCQOptionProps) {
             <EditorField
               content={props.text}
               setContent={(val) => {
-                // const prev1 = [...props.answers];
-                // prev1[props.index].text = val;
-                props.setanswers((prev) => {
-                  const updatedAnswers = [...prev];
-                  updatedAnswers[props.index] = {
-                    ...updatedAnswers[props.index],
-                    text: val,
-                  };
-                  return updatedAnswers;
-                });
+                const updatedAnswers = [...props.answers];
+                updatedAnswers[props.index] = {
+                  ...updatedAnswers[props.index],
+                  text: val,
+                };
+                console.log(props.index, updatedAnswers);
+                props.setanswers(updatedAnswers);
               }}
               placeholderText={`Type your option ${props.index + 1}`}
             />
           </Stack>
         </Flex>
-        {/* <Flex
-          onMouseEnter={() => {
-            setIsMouseHover(true);
-          }}
-          onMouseLeave={() => {
-            setIsMouseHover(false);
-          }}
-        >
-          {(isfocused || isMouseHover || isMd) && (
-            <GalleryIcon onimageAdd={props.onimageAdd} />
-          )}
-        </Flex> */}
       </Flex>
       <Flex justify="center" align="center" w="5%" pl={isMd ? 10 : 0}>
         <Flex
@@ -475,7 +456,6 @@ export const validateFile = (file: File) => {
     resolve(file);
   });
 };
-
 
 interface SingleTextFieldProps {
   text: string;
@@ -686,9 +666,24 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
     _id: "",
     fromQuestionBank: false,
   };
-  const [mcqQuestions, setMcqQuestions] = useState<MCQTypedQuestion[]>([
-    emptyMcqQuestion,
-  ]);
+
+  const emptySubjectiveQuestion: SUBjectivetypedQuestion = {
+    text: "",
+    questionImageUrl: "",
+    type: "INT",
+    questionType: "INT",
+    answer: "",
+    answerImageUrl: "",
+    totalMarks: 0,
+    difficultyLevel: "MEDIUM",
+    totalNegativeMarks: 0,
+    explaination: "",
+    _id: "",
+    fromQuestionBank: false,
+  };
+  const [questions, setQuestions] = useState<
+    (MCQTypedQuestion | SUBjectivetypedQuestion)[]
+  >([emptyMcqQuestion]);
 
   const [answerImages, setanswerImages] = useState<string[]>(values);
   const [questionImage, setQuestionImage] = useState<string>("");
@@ -714,11 +709,14 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
     questionText.trim().length !== 0 && answerText.trim().length !== 0;
   const isValidCaseQues =
     questionText.trim().length !== 0 &&
-    mcqQuestions.every((question) => {
+    questions.every((question) => {
       const isQuestionValid = question.text.trim().length !== 0;
-      const areAnswersValid = question.answers.every(
-        (answer) => answer.text.trim().length !== 0
-      );
+      const areAnswersValid =
+        question.type == QuestionType.McqQues.type
+          ? (question as MCQTypedQuestion).answers.every(
+              (answer) => answer.text.trim().length !== 0
+            )
+          : (question as SUBjectivetypedQuestion).answer.length > 0;
       return isQuestionValid && areAnswersValid;
     });
 
@@ -818,7 +816,10 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
                     text={x.text}
                     isCorrect={x.isCorrect}
                     answers={answers}
-                    setanswers={setanswers}
+                    setanswers={(newAnswers) => {
+                      answers[i] = newAnswers[i];
+                      setanswers([...answers]);
+                    }}
                     onimageAdd={(val) => {
                       setanswerImages((prev) => {
                         const prev1 = [...prev];
@@ -903,34 +904,73 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
           questionType?.parentType === QuestionParentType.CASEQ && (
             <Stack>
               <LabelFeild text="Passage Study Questions:" />
-              {mcqQuestions.map((x, i) => {
-                return (
-                  <MCQCaseBasedQuestion
-                    data={x}
-                    onEditClick={(val) => {
-                      setMcqQuestions((prev: any) => {
-                        const prev1 = [...prev];
-                        prev1[i] = val;
-                        return prev1;
-                      });
-                    }}
-                    onDeleteClick={() => {
-                      if (mcqQuestions.length > 1)
-                        setMcqQuestions((prev: any) => {
-                          const prev1 = [...prev];
-                          prev1.splice(i, 1);
-                          return prev1;
-                        });
-                    }}
-                  />
-                );
-              })}
+              <Stack>
+                {questions.map((x, i) => {
+                  if (x.type == QuestionType.McqQues.type) {
+                    return (
+                      <MCQCaseBasedQuestion
+                        data={x as MCQTypedQuestion}
+                        onEditClick={(val) => {
+                          setQuestions((prev: any) => {
+                            const prev1 = [...prev];
+                            prev1[i] = val;
+                            return prev1;
+                          });
+                        }}
+                        onDeleteClick={() => {
+                          if (questions.length > 1)
+                            setQuestions((prev: any) => {
+                              const prev1 = [...prev];
+                              prev1.splice(i, 1);
+                              return prev1;
+                            });
+                        }}
+                      />
+                    );
+                  } else {
+                    return (
+                      <Stack>
+                        <Text> Question{i+1}</Text>
+                        <SingleTextFeild
+                          text={x.text}
+                          setText={(val: string) => {
+                            x.text = val;
+                            setQuestions([...questions]);
+                          }}
+                          placeHolderText="Type your question"
+                        />
+                        {x.type === QuestionType.IntegerQues.type && (
+                          <IntegerInput
+                            answerText={(x as SUBjectivetypedQuestion).answer}
+                            setAnswerText={(answerText: string) => {
+                              (x as SUBjectivetypedQuestion).answer =
+                                answerText;
+                              setQuestions([...questions]);
+                            }}
+                          />
+                        )}
+                        {x.type !== QuestionType.IntegerQues.type && (
+                          <SingleTextFeild
+                            text={(x as SUBjectivetypedQuestion).answer}
+                            setText={(answerText: string) => {
+                              (x as SUBjectivetypedQuestion).answer =
+                                answerText;
+                              setQuestions([...questions]);
+                            }}
+                            placeHolderText="Type your answer"
+                          />
+                        )}
+                      </Stack>
+                    );
+                  }
+                })}
+              </Stack>
               <Button
                 bg="white"
                 color="black"
                 size={isMd ? "lg" : "xl"}
                 onClick={() => {
-                  setMcqQuestions((prev: any) => {
+                  setQuestions((prev: any) => {
                     return [...prev, emptyMcqQuestion];
                   });
                 }}
@@ -947,7 +987,32 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
                 }}
                 fz={isMd ? 14 : 18}
               >
-                Add Multiple choice question
+                Add Multiple Choice Question
+              </Button>
+
+              <Button
+                bg="white"
+                color="black"
+                size={isMd ? "lg" : "xl"}
+                onClick={() => {
+                  setQuestions((prev: any) => {
+                    return [...prev, emptySubjectiveQuestion];
+                  });
+                }}
+                style={{
+                  color: "black",
+                  // border:'black solid 1px',
+                  boxShadow: "0px 0px 2px 0px rgba(0, 0, 0, 0.25)",
+                  borderRadius: "10px",
+                }}
+                sx={{
+                  "&:hover": {
+                    background: "white",
+                  },
+                }}
+                fz={isMd ? 14 : 18}
+              >
+                Add Integer Type Question
               </Button>
             </Stack>
           )}
@@ -1015,16 +1080,22 @@ export function AddNewQuestion(props: AddNewQuestionProps) {
                 });
               } else if (questionType.parentType === QuestionParentType.CASEQ) {
                 const text1 = await uploadPhotos(questionText);
-                const mcqTextQ = mcqQuestions;
-                for (let i = 0; i < mcqQuestions.length; i++) {
+                const mcqTextQ = questions;
+                for (let i = 0; i < questions.length; i++) {
                   const text1 = await uploadPhotos(mcqTextQ[i].text);
-                  const answers2 = mcqTextQ[i].answers;
-                  for (let i = 0; i < answers2.length; i++) {
-                    const ans = await uploadPhotos(answers2[i].text);
-                    answers2[i].text = ans;
+                  if (questions[i].type == QuestionType.McqQues.type) {
+                    const answers2 = (mcqTextQ[i] as MCQTypedQuestion).answers;
+                    for (let i = 0; i < answers2.length; i++) {
+                      const ans = await uploadPhotos(answers2[i].text);
+                      answers2[i].text = ans;
+                    }
+                    mcqTextQ[i].text = text1;
+                    (mcqTextQ[i] as MCQTypedQuestion).answers = answers2;
+                  } else {
+                    (mcqTextQ[i] as SUBjectivetypedQuestion).answer = (
+                      mcqTextQ[i] as SUBjectivetypedQuestion
+                    ).answer;
                   }
-                  mcqTextQ[i].text = text1;
-                  mcqTextQ[i].answers = answers2;
                 }
                 props.onCaseBasedQuestionSubmit({
                   caseStudyText: text1,
@@ -1425,9 +1496,9 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
     props.question.questionImageUrl
   );
 
-  const [mcqQuestions, setMcqQuestions] = useState<MCQTypedQuestion[] | SUBjectivetypedQuestion[]>(
-    props.question.questions
-  );
+  const [questions, setQuestions] = useState<
+    (MCQTypedQuestion | SUBjectivetypedQuestion)[]
+  >(props.question.questions);
   const [questionMark, setQuestionMark] = useState<number>(
     props.question.totalMarks
   );
@@ -1439,19 +1510,22 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
   );
 
   const values = ["", "", "", ""];
-  // const isValidQuestion =
-  //   questionText.length !== 0 &&
-  //   questionText.trim().length !== 0 &&
-  //   mcqQuestions.every((question) => {
-  //     const isQuestionValid = question.text.trim().length !== 0;
-  //     const areAnswersValid = question.answers.every(
-  //       (answer) => answer.text.trim().length !== 0
-  //     );
-  //     return isQuestionValid && areAnswersValid && question.totalMarks !== 0;
-  //   }) &&
-  //   !props.hideMarks
-  //     ? true
-  //     : true;
+  const isValidQuestion =
+    questionText.length !== 0 &&
+    questionText.trim().length !== 0 &&
+    questions.every((question) => {
+      const isQuestionValid = question.text.trim().length !== 0;
+      const areAnswersValid =
+        question.type == QuestionType.McqQues.type
+          ? (question as MCQTypedQuestion).answers.every(
+              (answer) => answer.text.trim().length !== 0
+            )
+          : (question as SUBjectivetypedQuestion).answer.length > 0;
+      return isQuestionValid && areAnswersValid && question.totalMarks !== 0;
+    }) &&
+    !props.hideMarks
+      ? true
+      : true;
 
   const initialValues = values.map((x, i) => {
     if (i === 0) {
@@ -1479,12 +1553,26 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
     _id: "",
     fromQuestionBank: false,
   };
+  const emptySubjectiveQuestion: SUBjectivetypedQuestion = {
+    text: "",
+    questionImageUrl: "",
+    type: "INT",
+    questionType: "INT",
+    answer: "",
+    answerImageUrl: "",
+    totalMarks: 0,
+    difficultyLevel: "MEDIUM",
+    totalNegativeMarks: 0,
+    explaination: "",
+    _id: "",
+    fromQuestionBank: false,
+  };
 
   useEffect(() => {
     setQuestionImage(props.question.questionImageUrl);
   }, [props.question.questionImageUrl]);
   useEffect(() => {
-    setMcqQuestions(props.question.questions);
+    setQuestions(props.question.questions);
   }, [props.question.questions]);
 
   useEffect(() => {
@@ -1505,7 +1593,7 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
       style={{ borderRadius: "10px", position: "relative" }}
       withBorder
     >
-      { isEditQuestion === false && (
+      {isEditQuestion === false && (
         <Stack px={30}>
           <ShowImage url={props.question.questionImageUrl} />
           <Flex justify="space-between" align="flex-start">
@@ -1550,33 +1638,36 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
                   ></div>
                 </Flex>
                 <Divider size="sm" color="#000000" mx={-30} />
-                { mcqQuestion.type == QuestionType.McqQues.type ?
+                {mcqQuestion.type == QuestionType.McqQues.type ? (
                   <>
-                { (mcqQuestion as MCQTypedQuestion).answers.map((y, i) => {
-                  return (
-                    //change this parent for integer type
-                    <Flex align="center">
-                      <Radio checked={y.isCorrect} mr={5} />
-                      <Stack>
-                        <ShowImage url={mcqQuestion.answerImageUrl[i]} />
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: reduceImageScaleAndAlignLeft2(y.text),
-                          }}
-                        ></div>
-                      </Stack>
-                    </Flex>
-                  );
-                })}
-                </> :
-                <>
-                <div
-                          dangerouslySetInnerHTML={{
-                            __html: reduceImageScaleAndAlignLeft2((mcqQuestion as SUBjectivetypedQuestion).answer),
-                          }}
-                        ></div>
-                </>
-              }
+                    {(mcqQuestion as MCQTypedQuestion).answers.map((y, i) => {
+                      return (
+                        //change this parent for integer type
+                        <Flex align="center">
+                          <Radio checked={y.isCorrect} mr={5} />
+                          <Stack>
+                            <ShowImage url={mcqQuestion.answerImageUrl[i]} />
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: reduceImageScaleAndAlignLeft2(y.text),
+                              }}
+                            ></div>
+                          </Stack>
+                        </Flex>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: reduceImageScaleAndAlignLeft2(
+                          (mcqQuestion as SUBjectivetypedQuestion).answer
+                        ),
+                      }}
+                    ></div>
+                  </>
+                )}
                 {mcqQuestion.explaination &&
                   mcqQuestion.explaination !== "" && (
                     <Flex>
@@ -1630,10 +1721,9 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
           )}
         </Stack>
       )}
-      {/* {isEditQuestion === true && (
+      {isEditQuestion === true && (
         <Stack>
           <LabelFeild text="Enter your paragraph/Comprehension:" />
-
           <SingleTextFeild
             text={questionText}
             setText={setQuestionText}
@@ -1641,30 +1731,129 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
           />
           <Stack spacing={5}>
             <LabelFeild text="Passage Questions:" />
+            {props.question.questionImageUrl && (
+              <ShowImage url={props.question.questionImageUrl} />
+            )}
 
-            { mcqQuestions.map((x, i) => {
-              {
+            {questions.map((x, i) => {
               return (
-                <MCQCaseBasedQuestion
-                  data={x}
-                  onEditClick={(val) => {
-                    setMcqQuestions((prev) => {
-                      const prev1 = [...prev];
-                      prev1[i] = val;
-                      return prev1;
-                    });
-                  }}
-                  onDeleteClick={() => {
-                    if (mcqQuestions.length > 1)
-                      setMcqQuestions((prev) => {
-                        const prev1 = [...prev];
-                        prev1.splice(i, 1);
-                        return prev1;
-                      });
-                  }}
-                />
+                <Stack>
+                  <Text>Question: {i + 1}</Text>
+                  <SingleTextFeild
+                    text={x.text}
+                    setText={(val: string) => {
+                      x.text = val;
+                      setQuestions([...questions]);
+                    }}
+                    placeHolderText="Type your question"
+                  />
+
+                  {x.type == QuestionType.McqQues.type ? (
+                    <>
+                      <Stack spacing={5}>
+                        {(x as MCQTypedQuestion).answers.map(
+                          (innerAnswer, i) => {
+                            return (
+                              <MCQOption
+                                index={i}
+                                text={innerAnswer.text}
+                                isCorrect={innerAnswer.isCorrect}
+                                answers={(x as MCQTypedQuestion).answers}
+                                //Todo
+                                setanswers={(prev) => {
+                                  (x as MCQTypedQuestion).answers[i] = prev[i];
+                                  setQuestions([...questions]);
+                                }}
+                                onimageAdd={(val) => {
+                                  (x as MCQTypedQuestion).answerImageUrl[i] =
+                                    val;
+                                  setQuestions([...questions]);
+                                }}
+                                onDeleteOption={() => {
+                                  (x as MCQTypedQuestion).answerImageUrl.splice(
+                                    i,
+                                    1
+                                  );
+                                  setQuestions([...questions]);
+                                }}
+                                answerImg={
+                                  (x as MCQTypedQuestion).answerImageUrl[i]
+                                }
+                                type={props.question.type}
+                              />
+                            );
+                          }
+                        )}
+
+                        <Flex
+                          align="center"
+                          style={{
+                            border: "none",
+                            borderBottom: "2px solid #CCCCCC",
+                            borderRadius: 0,
+                          }}
+                          px={10}
+                          w="98%"
+                          py={15}
+                          onClick={() => {
+                            (x as MCQTypedQuestion).answers.push({
+                              text: "",
+                              isCorrect: true,
+                            });
+                            (x as MCQTypedQuestion).answerImageUrl.push("");
+                          }}
+                        >
+                          <Radio
+                            styles={{
+                              radio: {
+                                border: "#808080 solid 1px",
+                                opacity: 0.4,
+                              },
+                            }}
+                            checked={false}
+                          />
+                          <Text fz={14} fw={400} color="#CCCCCC" ml={10}>
+                            Add Option
+                          </Text>
+                        </Flex>
+                      </Stack>
+                    </>
+                  ) : (
+                    <>
+                      {props.question.type ===
+                        QuestionType.IntegerQues.type && (
+                        <IntegerInput
+                          answerText={(x as SUBjectivetypedQuestion).answer}
+                          setAnswerText={(answerText: string) => {
+                            (x as SUBjectivetypedQuestion).answer = answerText;
+                            setQuestions([...questions]);
+                          }}
+                        />
+                      )}
+                      {props.question.type !==
+                        QuestionType.IntegerQues.type && (
+                        <SingleTextFeild
+                          text={(x as SUBjectivetypedQuestion).answer}
+                          setText={(answerText: string) => {
+                            (x as SUBjectivetypedQuestion).answer = answerText;
+                            setQuestions([...questions]);
+                          }}
+                          placeHolderText="Type your answer"
+                        />
+                      )}
+                    </>
+                  )}
+                  <Text>Solution:</Text>
+                  <SingleTextFeild
+                    text={x.explaination}
+                    setText={(explaination: string) => {
+                      x.explaination = explaination;
+                      setQuestions([...questions]);
+                    }}
+                    placeHolderText="Type your Solution"
+                  />
+                </Stack>
               );
-            }
             })}
 
             <Button
@@ -1672,13 +1861,12 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
               color="black"
               size="xl"
               onClick={() => {
-                setMcqQuestions((prev) => {
+                setQuestions((prev) => {
                   return [...prev, emptyMcqQuestion];
                 });
               }}
               style={{
                 color: "black",
-                // border:'black solid 1px',
                 boxShadow: "0px 0px 2px 0px rgba(0, 0, 0, 0.25)",
                 borderRadius: "10px",
               }}
@@ -1688,23 +1876,47 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
                 },
               }}
             >
-              Add Multiple choice question
+              Add Multiple Choice Question
+            </Button>
+            <Button
+              bg="white"
+              color="black"
+              size="xl"
+              onClick={() => {
+                setQuestions((prev) => {
+                  return [...prev, emptySubjectiveQuestion];
+                });
+              }}
+              style={{
+                color: "black",
+                boxShadow: "0px 0px 2px 0px rgba(0, 0, 0, 0.25)",
+                borderRadius: "10px",
+              }}
+              sx={{
+                "&:hover": {
+                  background: "white",
+                },
+              }}
+            >
+              Add an Integer Type Question
             </Button>
           </Stack>
           <EditFooter
             onClick={async () => {
               if (isValidQuestion) {
                 const text1 = await uploadPhotos(questionText);
-                const mcqTextQ = mcqQuestions;
-                for (let i = 0; i < mcqQuestions.length; i++) {
-                  const text1 = await uploadPhotos(mcqTextQ[i].text);
-                  const answers2 = mcqTextQ[i].answers;
-                  for (let i = 0; i < answers2.length; i++) {
-                    const ans = await uploadPhotos(answers2[i].text);
-                    answers2[i].text = ans;
+                const mcqTextQ = questions;
+                for (let i = 0; i < questions.length; i++) {
+                  if (questions[i].type == QuestionType.McqQues.type) {
+                    const text1 = await uploadPhotos(mcqTextQ[i].text);
+                    const answers2 = (mcqTextQ[i] as MCQTypedQuestion).answers;
+                    for (let i = 0; i < answers2.length; i++) {
+                      const ans = await uploadPhotos(answers2[i].text);
+                      answers2[i].text = ans;
+                    }
+                    (mcqTextQ[i] as MCQTypedQuestion).text = text1;
+                    (mcqTextQ[i] as MCQTypedQuestion).answers = answers2;
                   }
-                  mcqTextQ[i].text = text1;
-                  mcqTextQ[i].answers = answers2;
                 }
 
                 props.onEditClick({
@@ -1732,7 +1944,7 @@ export function CaseBasedQuestionCard(props: CaseBasedQuestionProps) {
             setNegativeMark={setNegativeMark}
           />
         </Stack>
-      )} */}
+      )}
     </Card>
   );
 }
@@ -1883,8 +2095,6 @@ export function MCQquestionCard(props: McqQuestionProps) {
     setQuestionText(props.question.text);
   }, [props.question.text]);
 
-
-
   const isMd = useMediaQuery(`(max-width: 820px)`);
   const isValidQuestion =
     questionText.length !== 0 &&
@@ -1926,7 +2136,8 @@ export function MCQquestionCard(props: McqQuestionProps) {
             </Flex>
             <DifficultyChip
               difficultyLevel={
-                (props.question.difficultyLevel?? DifficultyLevel.MEDIUM) as DifficultyLevel
+                (props.question.difficultyLevel ??
+                  DifficultyLevel.MEDIUM) as DifficultyLevel
               }
             />
           </Flex>
@@ -1972,26 +2183,24 @@ export function MCQquestionCard(props: McqQuestionProps) {
                 ></div>
               </Flex>
             )}
-          {props.showBottomBar && (
-            <EditAndDeleteSection
-              canBeDeleted={props.canBeDeleted}
-              onEditClick={() => {
-                setisEditQuestion(true);
-                Mixpanel.track(WebAppEvents.CREATE_TEST_EDIT_CLICKED, {
-                  testType: props.testType,
-                });
-              }}
-              onDeleteClick={() => {
-                props.onDeleteClick();
-                Mixpanel.track(WebAppEvents.CREATE_TEST_DELETE_CLICKED, {
-                  testType: props.testType,
-                });
-              }}
-              questionMark={props.question.totalMarks}
-              hideMarks={props.hideMarks}
-              negativeMarks={props.question.totalNegativeMarks.toString()}
-            />
-          )}
+          <EditAndDeleteSection
+            canBeDeleted={props.canBeDeleted}
+            onEditClick={() => {
+              setisEditQuestion(true);
+              Mixpanel.track(WebAppEvents.CREATE_TEST_EDIT_CLICKED, {
+                testType: props.testType,
+              });
+            }}
+            onDeleteClick={() => {
+              props.onDeleteClick();
+              Mixpanel.track(WebAppEvents.CREATE_TEST_DELETE_CLICKED, {
+                testType: props.testType,
+              });
+            }}
+            questionMark={props.question.totalMarks}
+            hideMarks={props.hideMarks}
+            negativeMarks={props.question.totalNegativeMarks.toString()}
+          />
         </Stack>
       )}
       {isEditQuestion === true && (
@@ -2010,7 +2219,10 @@ export function MCQquestionCard(props: McqQuestionProps) {
                   text={x.text}
                   isCorrect={x.isCorrect}
                   answers={answers}
-                  setanswers={setanswers}
+                  setanswers={(newAnswers) => {
+                    answers[i] = newAnswers[i];
+                    setanswers([...answers]);
+                  }}
                   onimageAdd={(val) => {
                     setanswerImages((prev) => {
                       const prev1 = [...prev];
@@ -2036,13 +2248,10 @@ export function MCQquestionCard(props: McqQuestionProps) {
               style={{
                 border: "none",
                 borderBottom: "2px solid #CCCCCC",
-                // background: "#F7F7F7",
                 borderRadius: 0,
-                // height: "40px",
               }}
               px={10}
               w="98%"
-              // h="80px"
               py={15}
               onClick={() => {
                 setanswers((prev) => {
@@ -2054,13 +2263,11 @@ export function MCQquestionCard(props: McqQuestionProps) {
                   // ...
                   prev.push(prev1);
                   return prev;
-                  // return [...prev, prev1];
                 });
                 setanswerImages((prev) => {
                   return [...prev, ""];
                 });
               }}
-              // mr={20}
             >
               <Radio
                 styles={{

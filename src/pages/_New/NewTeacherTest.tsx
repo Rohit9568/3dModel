@@ -145,7 +145,7 @@ export function NewTeacherTest(props: { onlogout: () => void }) {
       formObj: {
         ...finaltest2,
         name: newTestData?.name,
-        duration: newTestData?.duration,
+        duration: (newTestData?.duration??0)*60,
         startTime: newTestData?.startTime,
         isEnableMultipleTestAttempts: newTestData?.isEnableMultipleTestAttempts,
       },
@@ -192,16 +192,14 @@ export function NewTeacherTest(props: { onlogout: () => void }) {
     ) {
       fetchFullTest(viewTestId || "")
         .then((data: any) => {
-          console.log(data.duration);
           setTestData({
             ...data,
             selectedTestTemplate: customTemplate,
             startTime: data.testScheduleTime
               ? new Date(data.testScheduleTime)
               : null,
-            duration: parseInt(data.duration) / 60,
+            duration: parseInt(data.duration)/60,
           });
-          console.log(data);
         })
         .catch((error) => {
           console.log(error);

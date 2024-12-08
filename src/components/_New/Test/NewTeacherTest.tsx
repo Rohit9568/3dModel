@@ -700,3 +700,85 @@ export function createNewSectionTypeHtmlFromTestData(
     </>
   );
 }
+
+export function createNewSectionTypeHtmlFromTestDataV2(
+  test: FullTest,
+  name: string,
+  iconUrl: string,
+  subHeading: string | null,
+  banner: string | null,
+  subscriptionModelType: string,
+  showInstructions: boolean,
+  comicSanFont: boolean,
+  inlineContent: boolean,
+  phoneNumber: string,
+  secondPhoneNumber: string,
+  address: string,
+  isSolutions: boolean
+) {
+  const lettering = ["a", "b", "c", "d", "e"];
+  const instructions = [];
+
+  const myMap: Map<
+    string,
+    CaseBasedQuestion | McqQuestion | SubjectiveQuestion
+  > = new Map();
+  test.questions.map((x) => {
+    myMap.set(x._id, x);
+  });
+  test.casebasedquestions.map((x) => {
+    myMap.set(x._id, x);
+  });
+  test.subjectiveQuestions.map((x) => {
+    myMap.set(x._id, x);
+  });
+  instructions.push(
+    `The Test paper has ${test.maxQuestions} questions in total.`
+  );
+  instructions.push(`Marks are indicated against each question.`);
+  let count = 0;
+  for (let i = 0; i < test.sections.length; i++) {
+    let section = test.sections[i];
+    instructions.push(
+      `Questions from ${i + 1 + count} to ${
+        count + i + section.questions.length
+      } are ${section.name} questions`
+    );
+    count += section.questions.length;
+  }
+
+  instructions.push(
+    `Follow the specified procedure for submitting your answer sheets or online responses.`
+  );
+  return (
+    <>
+    <Stack>
+      <>
+      {
+        test.superSections.map((singleSuperSection)=>{
+          return <Stack>
+          { test.superSections.length>1 && <Text>
+            Section - {singleSuperSection.name}
+          </Text>
+        }
+          {
+             test.sections.filter(
+              (singleSection) =>{ 
+                return singleSuperSection.sections.indexOf(singleSection._id)!=-1
+              })?.map((singleSection,index)=>{
+                return <Stack>
+                  <Text>
+                    Part{index+1}: {singleSection.name}
+                  </Text>
+                </Stack>
+              })
+          }
+          </Stack>
+        })
+      }
+      </>
+    </Stack>
+    </>
+  );
+}
+

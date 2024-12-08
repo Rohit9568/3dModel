@@ -269,6 +269,7 @@ export function SidebarInstitute(props: SideBar) {
                 mainPath={props.mainPath}
                 onShowProfileClick={props.onShowProfileClick}
                 profilePic={props.profilePic}
+                instituteName={props.schoolName}
               />
               {!isCollapsed && (
                 <Text ml={20} fz={20} fw={600}>

@@ -21,8 +21,9 @@ import { GetStudentGifts } from "../../../_parentsApp/features/instituteStudentS
 import PhoneInput from "react-phone-input-2";
 import React from "react";
 
-const ShowStudentResults = lazy(() => import('../../../_parentsApp/Components/ShowStudentResults'));
-
+const ShowStudentResults = lazy(
+  () => import("../../../_parentsApp/Components/ShowStudentResults")
+);
 
 interface UpdateStudentProfile {
   name: string;
@@ -65,7 +66,7 @@ export function UpdateStudentProfile(props: UpdateStudentProfile) {
 
   const isFormFilled = () => {
     for (let phoneNumber of phoneNumbers) {
-      const isNumberValid = phoneNumber.length>8;
+      const isNumberValid = phoneNumber.length > 8;
       if (!isNumberValid) return false;
     }
     return nameValue.trim().length !== 0 && parentNameValue.trim().length !== 0
@@ -164,31 +165,31 @@ export function UpdateStudentProfile(props: UpdateStudentProfile) {
                 </Text>
                 {phoneNumbers.map((phoneNumber, index) => (
                   <div key={index}>
-
-<PhoneInput
-                   country="in"
-                    placeholder="Enter phone number"
-                    value={phoneNumber}
-                    onChange={(value?: string | undefined) => {
-                      if (value) {
-                        var finalPhoneNum = value.toString();
-                        if (finalPhoneNum[0] == "0") {
-                          finalPhoneNum = finalPhoneNum.substring(1);
+                    <PhoneInput
+                      country="in"
+                      placeholder="Enter phone number"
+                      value={phoneNumber}
+                      onChange={(value?: string | undefined) => {
+                        if (value) {
+                          var finalPhoneNum = value.toString();
+                          if (finalPhoneNum[0] == "0") {
+                            console.log(finalPhoneNum);
+                            finalPhoneNum = finalPhoneNum.substring(1);
+                          }
+                          const newPhoneNumbers = [...phoneNumbers];
+                          newPhoneNumbers[index] = `+${finalPhoneNum}`;
+                          setPhoneNumbers(newPhoneNumbers);
                         }
-                        const newPhoneNumbers = [...phoneNumbers];
-                        newPhoneNumbers[index] = finalPhoneNum;
-                        setPhoneNumbers(newPhoneNumbers);
-                      }
-                    }}
-                    containerStyle={{
-                      height:"36px"
-                    }}
-                    inputStyle={{
-                      width:"100%",
-                      height:"100%",
-                      border:"solid 1px #00000040",
-                    }}
-                  />
+                      }}
+                      containerStyle={{
+                        height: "36px",
+                      }}
+                      inputStyle={{
+                        width: "100%",
+                        height: "100%",
+                        border: "solid 1px #00000040",
+                      }}
+                    />
                     {/* <input
                       placeholder="Enter phone number"
                       value={phoneNumber}
@@ -424,16 +425,16 @@ export function UpdateStudentProfile(props: UpdateStudentProfile) {
           <Grid w={"100%"} ml={10} pr={isMd ? 0 : 80}>
             <Grid.Col span={isMd || allStudentGifts.length === 0 ? 12 : 8}>
               <React.Suspense fallback={<></>}>
-              <ShowStudentResults
-                studentData={{
-                  studentId: props.studentData.studentId,
-                  batchId: props.instituteClassId,
-                  batchName: "",
-                  studentName: props.studentData.studentName,
-                }}
-                showTestCards={false}
-                onResultArrowClicked={() => {}}
-              />
+                <ShowStudentResults
+                  studentData={{
+                    studentId: props.studentData.studentId,
+                    batchId: props.instituteClassId,
+                    batchName: "",
+                    studentName: props.studentData.studentName,
+                  }}
+                  showTestCards={false}
+                  onResultArrowClicked={() => {}}
+                />
               </React.Suspense>
             </Grid.Col>
             {allStudentGifts.length > 0 && (

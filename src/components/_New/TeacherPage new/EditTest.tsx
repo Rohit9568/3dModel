@@ -40,9 +40,6 @@ const arr1 = [
   },
 ];
 
-function getQuestionType(type: string) {
-  return arr1.find((x) => x.type === type)?.questiontype;
-}
 export function EditTest(props: {
   testId: string;
   onBackClick: () => void;
@@ -109,7 +106,6 @@ export function EditTest(props: {
     fetchFullTest(props.testId)
       .then((data: any) => {
         props.setIsLoading(false);
-        console.log(data);
         const updatedMap = new Map(questionsMap);
 
         data.questions.forEach((x: any) => {
@@ -199,7 +195,7 @@ export function EditTest(props: {
       isNextSuperSectionClickablebeforeTime:
         isNextSuperSectionClickablebeforeTime,
     };
-    //ss
+    console.log(finaltest2);
     props.onTestEdit(finaltest2, props.testId);
   }
 
@@ -209,7 +205,6 @@ export function EditTest(props: {
         <Stack w="100%" justify="center" align="center">
           <Stack w="90%" pb={50} pt={20}>
             <Flex align="center">
-              {/* <Box onClick={} h="10px" w="20px" mr={10}> */}
               <IconChevronLeft
                 onClick={props.onBackClick}
                 size="30px"
@@ -219,7 +214,6 @@ export function EditTest(props: {
                   marginRight: "10px",
                 }}
               />
-              {/* </Box> */}
               <Text fz={20} fw={700}>
                 {props.titleTxt}
               </Text>

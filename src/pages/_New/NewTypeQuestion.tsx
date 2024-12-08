@@ -250,7 +250,6 @@ function SingleSection(props: SingleSectionProps) {
           )}
           {isAddFromQuestionBank && (
             <QuestionBankModal
-              setLoadingData={() => {}}
               type={props.type.type}
               isOpened={isAddFromQuestionBank}
               setOpened={setisAddFromQuestionBank}
@@ -361,7 +360,7 @@ export function NewTypeQuestion(props: NewTypeQuestionProps) {
                   {superSection.totalTime !== "" &&
                     superSection.totalTime !== "0" && (
                       <Text fz={23} fw={700}>
-                        {superSection.totalTime} min
+                        {parseInt(superSection.totalTime)/60} min
                       </Text>
                     )}
                 </Flex>

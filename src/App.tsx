@@ -30,9 +30,13 @@ import { VideoCallStartPage } from "./pages/VideoCallStartPage";
 import PrivacyPolicyScreen from "./pages/PrivacyPolicy";
 import RefundPolicyScreen from "./pages/RefundPolicy";
 import TermsScreen from "./pages/TermsofUse";
+import AnatomyModelSimulation from "./components/MegaModels/AnatomyModel/AnatomyModelSimulation";
+import { BarElement } from "chart.js";
+import SlicerModelSimulation from "./components/SlicerModel/SlicerModelSimulation";
 import VectorModelSimulation from "./features/vectorModelSimulations/VectorModelSimulation";
 import TrigonometryModelSimulation from "./components/TrigoModels/TrigonometryModelSimulation";
-import ThreeJSSimulationHandler from "./components/threejsSimulationHandler/ThreeJSSimulationHandler";
+import DetailModel from "./components/MegaModels/AnatomyModel/DetailModel";
+import OpticsModelSimulation from "./components/opticsSimulation/OpticsModelSimulation";
 const router = createBrowserRouter(
   [
     {
@@ -66,6 +70,10 @@ const router = createBrowserRouter(
     {
       path: "/:Institutename/:id/teach1/:navbarId/simulation/SIM-98715368-b544-4935-91b2-ad0fde086509",
       element: <TrigonometryModelSimulation />
+    },
+    {
+      path: "/OpticsMega",
+      element: <OpticsModelSimulation />,
     },
     {
       path: "/teacher/add",
@@ -133,6 +141,18 @@ const router = createBrowserRouter(
       element: <LandingPage />,
     },
     {
+      path: "/:Institutename/:id/teach1/:navbarId/simulation/anatomymodelsimulation",
+      element: <AnatomyModelSimulation />
+    },
+    {
+      path: '/:Institutename/:id/teach1/:navbarId/simulation/anatomymodelsimulation/:modelId',
+      element: <DetailModel />
+    },
+    {
+      path: '/:Institutename/:id/teach1/:navbarId/simulation/Anatomy3DBuilderMega',
+      element: <SlicerModelSimulation />
+    },
+    {
       path: "/:Institutename/:id/teach1/:navbarId",
       element: <LandingPage />,
     },
@@ -154,6 +174,10 @@ const router = createBrowserRouter(
     },
     {
       path: "/privacypolicy/:instituteName",
+      element: <PrivacyPolicyScreen />,
+    },
+    {
+      path: "/privacypolicy/",
       element: <PrivacyPolicyScreen />,
     },
     {

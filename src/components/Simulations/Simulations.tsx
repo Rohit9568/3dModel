@@ -190,6 +190,12 @@ export function SimulationCard(props: SimulationCardInterface) {
             videoUrl: props.videoUrl,
             isthreejs: props.isthreejs
           });
+          // console.log("clicked card", props._id)
+          // console.log("props are: ", props)
+          // let currentPath = window.location.pathname;
+          // if(props._id == "SIM-vc123"){
+          //   // navigate(`${currentPath}/${props._id}`)
+          // }
         }}
       >
         <div className="simulation-card" style={{ position: "relative" }}>
