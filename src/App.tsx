@@ -37,9 +37,15 @@ import VectorModelSimulation from "./features/vectorModelSimulations/VectorModel
 import TrigonometryModelSimulation from "./components/TrigoModels/TrigonometryModelSimulation";
 import DetailModel from "./components/MegaModels/AnatomyModel/DetailModel";
 import OpticsModelSimulation from "./components/opticsSimulation/OpticsModelSimulation";
+import Home from "./components/Home";
 const router = createBrowserRouter(
   [
     
+    {
+      path: "/",
+      element: <Home />,
+    },
+
     {
       path: "/onboarding",
       element: <OnBoarding />,
@@ -69,7 +75,7 @@ const router = createBrowserRouter(
       element: <TrigonometryModelSimulation />
     },
     {
-      path: "/OpticsMega",
+      path: "/optics",
       element: <OpticsModelSimulation />,
     },
     {
